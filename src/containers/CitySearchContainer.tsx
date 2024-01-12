@@ -9,6 +9,7 @@ import {
   setFirstSelectValue,
   setSecondSelectValue,
   setThirdSelectValue,
+  setAddress,
 } from '../redux/city/citySlice'
 import {
   fetchCityItems,
@@ -61,6 +62,7 @@ const CitySearchContainer: React.FC = React.memo((value) => {
     // 초기화
     dispatch(setCityItems([]))
     dispatch(fetchXYCoordinateBySearch(valueAttribute))
+    dispatch(setAddress(valueAttribute))
     dispatch(setFirstSelectValue({ value: '', label: '' }))
     dispatch(setSecondSelectValue({ value: '', label: '' }))
     dispatch(setThirdSelectValue({ value: '', label: '' }))

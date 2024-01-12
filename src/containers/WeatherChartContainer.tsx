@@ -27,7 +27,8 @@ const CanvasContainer = styled.div`
 `
 
 const WeatherChartContainer = React.memo(({ x, y }: coordinate) => {
-  const [selected, setSelected] = useState<string>('')
+  const [selected, setSelected] = useState<string>('/')
+  const { address } = useSelector((state: RootState) => state.city)
   const {
     temperatureLabels,
     temperatureData,
@@ -79,25 +80,25 @@ const WeatherChartContainer = React.memo(({ x, y }: coordinate) => {
     <Router>
       <TabContainer>
         <TabMenuButton
-          url="/LineChart"
+          url="/"
           title="온도"
           selected={selected}
           setSelected={setSelected}
         />
         <TabMenuButton
-          url="/HuminityBarChart"
+          url="/huminitybarchart"
           title="강수량"
           selected={selected}
           setSelected={setSelected}
         />
         <TabMenuButton
-          url="/PrecipitationBarChart"
+          url="/precipitationbarchart"
           title="습도"
           selected={selected}
           setSelected={setSelected}
         />
         <TabMenuButton
-          url="/WindBarChart"
+          url="/windbarchart"
           title="바람"
           selected={selected}
           setSelected={setSelected}
@@ -107,42 +108,49 @@ const WeatherChartContainer = React.memo(({ x, y }: coordinate) => {
         <CanvasContainer ref={containerRef}>
           <Routes>
             <Route
-              path="/LineChart"
+              path="/"
               element={
                 <LineChart
                   labels={temperatureLabels}
                   data={temperatureData}
                   labelTitle="온도"
+                  address={address}
                 />
               }
             />
             <Route
-              path="/HuminityBarChart"
+              path="/huminitybarchart"
               element={
                 <BarChart
                   labels={huminityLabels}
                   data={huminityData}
                   labelTitle="강수량"
+                  address={address}
+                  unit="mm"
                 />
               }
             />
             <Route
-              path="/PrecipitationBarChart"
+              path="/precipitationbarchart"
               element={
                 <BarChart
                   labels={precipitationLabels}
                   data={precipitationData}
                   labelTitle="습도"
+                  address={address}
+                  unit="%"
                 />
               }
             />
             <Route
-              path="/WindBarChart"
+              path="/windbarchart"
               element={
                 <BarChart
                   labels={windLabels}
                   data={windData}
                   labelTitle="바람"
+                  address={address}
+                  unit="m/s"
                 />
               }
             />

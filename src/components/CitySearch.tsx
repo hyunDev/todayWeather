@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { CitySearchType } from '../type/cityType'
 import styled from 'styled-components'
 
@@ -57,16 +57,45 @@ const AutoCompleteListItem = styled.li`
 `
 
 const CitySearch = ({ value, items, onChange, onClick }: CitySearchType) => {
+  const autoCompleteRef = useRef<HTMLDivElement>(null)
+  const [showAutoComplete, setShowAutoComplete] = useState(true)
+
+  useEffect(() => {
+    const focusOut = (event: MouseEvent) => {
+      const autoCompleteContainer = autoCompleteRef.current
+
+      // Check if the clicked element or any of its ancestors is the AutoCompleteContainer
+      if (
+        autoCompleteContainer &&
+        !autoCompleteContainer.contains(event.target as Node)
+      ) {
+        setShowAutoComplete(false)
+      }
+    }
+    setShowAutoComplete(true)
+    document.addEventListener('click', focusOut)
+    return () => {
+      document.removeEventListener('click', focusOut)
+    }
+  }, [items])
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      setShowAutoComplete(true)
+    }
+  }
+
   return (
     <SearchContainer>
       <Search
         type="text"
         value={value}
         onChange={onChange}
+        onKeyDown={handleKeyDown}
         placeholder="주소를 입력하세요"
       />
-      {items.length > 0 && value && (
-        <AutoCompleteContainer>
+      {items.length > 0 && value && showAutoComplete && (
+        <AutoCompleteContainer ref={autoCompleteRef}>
           <AutoCompleteList>
             {items.map((search, idx) => (
               <AutoCompleteListItem key={search.address} onClick={onClick}>

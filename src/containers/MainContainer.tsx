@@ -7,6 +7,7 @@ import { RootState } from '../redux/store'
 import {
   fetchXYCoordinateBySelect,
   setSearchInputValue,
+  setAddress,
 } from '../redux/city/citySlice'
 // container
 import CitySelectSet from './CitySelectSet'
@@ -39,6 +40,7 @@ const MainLayout = styled.div`
 const MainContainer: React.FC = () => {
   const [x, setX] = useState<number>(0)
   const [y, setY] = useState<number>(0)
+
   const dispatch = useDispatch()
   const {
     firstSelectValue,
@@ -55,6 +57,11 @@ const MainContainer: React.FC = () => {
           secondSelectValue.label,
           thirdSelectValue.label,
         ])
+      )
+      dispatch(
+        setAddress(
+          `${firstSelectValue.label} ${secondSelectValue.label} ${thirdSelectValue.label}`
+        )
       )
       dispatch(setSearchInputValue(''))
     }

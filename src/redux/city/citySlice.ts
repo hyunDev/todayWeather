@@ -16,6 +16,7 @@ interface CityState {
   thirdSelectValue: Option
   searchInputValue: string
   xyCoordinate: Coordinate
+  address: string
   cityItems: CityDatas[]
 }
 
@@ -28,6 +29,7 @@ const initialState: CityState = {
   thirdSelectValue: { value: '', label: '' },
   searchInputValue: '',
   xyCoordinate: { x: 0, y: 0 },
+  address: '',
   cityItems: [],
 }
 
@@ -141,6 +143,9 @@ const citySlice = createSlice({
     setSearchInputValue: (state, action) => {
       state.searchInputValue = action.payload
     },
+    setAddress: (state, action) => {
+      state.address = action.payload
+    },
     setCityItems: (state, action) => {
       state.cityItems = action.payload
     },
@@ -183,6 +188,7 @@ export const {
   setSecondSelectValue,
   setThirdSelectValue,
   setSearchInputValue,
+  setAddress,
   setCityItems,
 } = citySlice.actions
 

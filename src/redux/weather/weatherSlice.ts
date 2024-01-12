@@ -46,16 +46,16 @@ const weatherSlice = createSlice({
         parseFloat(item.fcstValue)
       )
       state.temperatureLabels = state.temperatureOriginData.map(
-        (item: any) => `${item.fcstTime}`
+        (item: any) => `${item.fcstTime.slice(0, 2)} 시`
       )
       state.huminityLabels = state.huminityOriginData.map(
-        (item: any) => `${item.fcstTime}`
+        (item: any) => `${item.fcstTime.slice(0, 2)} 시`
       )
       state.precipitationLabels = state.precipitationOriginData.map(
-        (item: any) => `${item.fcstTime}`
+        (item: any) => `${item.fcstTime.slice(0, 2)} 시`
       )
       state.windLabels = state.windOriginData.map(
-        (item: any) => `${item.fcstTime}`
+        (item: any) => `${item.fcstTime.slice(0, 2)} 시`
       )
     })
   },

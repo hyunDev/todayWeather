@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,30 +8,27 @@ import {
   Tooltip,
   Legend,
   ChartData,
+  ChartOptions,
 } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top' as const,
-    },
-    title: {
-      display: false,
-    },
-  },
-}
-
 interface BarChartProps {
   labels: string[]
   data: number[]
   labelTitle: string
+  address: string
+  unit: string
 }
 
-const BarChart = ({ labels, data, labelTitle }: BarChartProps) => {
+const BarChart = ({
+  labels,
+  data,
+  labelTitle,
+  address,
+  unit,
+}: BarChartProps) => {
   const [chartData, setChartData] = useState<ChartData<'bar'>>({
     labels: labels,
     datasets: [
@@ -42,6 +39,37 @@ const BarChart = ({ labels, data, labelTitle }: BarChartProps) => {
       },
     ],
   })
+  const optionsData: ChartOptions<'bar'> = useMemo(
+    () => ({
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top' as const,
+        },
+        title: {
+          display: true,
+          text: address,
+        },
+      },
+      scales: {
+        y: {
+          title: {
+            display: true,
+            align: 'end',
+            color: '#525CEB',
+            font: {
+              size: 12,
+              family: "'Noto Sans KR', sans-serif",
+              weight: 500,
+            },
+            text: unit,
+          },
+        },
+      },
+    }),
+    [address, unit]
+  )
+  const [options, setOptions] = useState<ChartOptions<'bar'>>(optionsData)
 
   useEffect(() => {
     setChartData({
@@ -54,7 +82,8 @@ const BarChart = ({ labels, data, labelTitle }: BarChartProps) => {
         },
       ],
     })
-  }, [labels, data, labelTitle])
+    setOptions(optionsData)
+  }, [labels, data, labelTitle, optionsData])
 
   return <Bar options={options} data={chartData} />
 }

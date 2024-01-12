@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Line } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
   ChartData,
+  ChartOptions,
 } from 'chart.js'
 ChartJS.register(
   CategoryScale,
@@ -25,9 +26,10 @@ interface LineChartProps {
   labels: string[]
   data: number[]
   labelTitle: string
+  address: string
 }
 
-const LineChart = ({ labels, data, labelTitle }: LineChartProps) => {
+const LineChart = ({ labels, data, labelTitle, address }: LineChartProps) => {
   const [chartData, setChartData] = useState<ChartData<'line'>>({
     labels: labels,
     datasets: [
@@ -40,6 +42,40 @@ const LineChart = ({ labels, data, labelTitle }: LineChartProps) => {
     ],
   })
 
+  const optionData: ChartOptions<'line'> = useMemo(
+    () => ({
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top' as const,
+        },
+        title: {
+          display: true,
+          text: address,
+        },
+      },
+      scales: {
+        y: {
+          ticks: {
+            stepSize: 1,
+          },
+          title: {
+            display: true,
+            align: 'end',
+            color: '#525CEB',
+            font: {
+              size: 12,
+              family: "'Noto Sans KR', sans-serif",
+              weight: 500,
+            },
+            text: '단위: 도',
+          },
+        },
+      },
+    }),
+    [address]
+  )
+  const [options, setOptions] = useState<ChartOptions<'line'>>(optionData)
   useEffect(() => {
     setChartData({
       labels: labels,
@@ -52,21 +88,10 @@ const LineChart = ({ labels, data, labelTitle }: LineChartProps) => {
         },
       ],
     })
-  }, [labels, data, labelTitle])
+    setOptions(optionData)
+  }, [labels, data, labelTitle, optionData])
 
   return <Line options={options} data={chartData} />
-}
-
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top' as const,
-    },
-    title: {
-      display: false,
-    },
-  },
 }
 
 export default LineChart
