@@ -25,6 +25,15 @@ const CanvasContainer = styled.div`
   width: 100%;
   height: 100%;
 `
+const coordinateEqual = (
+  prevCoordinate: coordinate,
+  nextCoordinate: coordinate
+) => {
+  return (
+    prevCoordinate.x === nextCoordinate.x &&
+    prevCoordinate.y === nextCoordinate.y
+  )
+}
 
 const WeatherChartContainer = React.memo(({ x, y }: coordinate) => {
   const [selected, setSelected] = useState<string>('/')
@@ -159,6 +168,6 @@ const WeatherChartContainer = React.memo(({ x, y }: coordinate) => {
       </ChartContainer>
     </Router>
   )
-})
+}, coordinateEqual)
 
 export default WeatherChartContainer

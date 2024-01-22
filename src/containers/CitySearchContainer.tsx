@@ -1,6 +1,6 @@
 // library
 import React, { useState, ChangeEvent, useRef, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import styled from 'styled-components'
 // state
 import { RootState } from '../redux/store'
@@ -22,14 +22,16 @@ import CitySearch from '../components/CitySearch'
 const SearchContainer = styled.div`
   margin-bottom: 15px;
 `
-const CitySearchContainer: React.FC = React.memo((value) => {
+
+const CitySearchContainer: React.FC = React.memo(() => {
   // list에서 선택했는지, 선택했으면 리스트 갱신 x
   let isChoiced = useRef(false)
   let isSelectCityInList = useRef(false)
   const dispatch = useDispatch()
   // const [inputValue, setInputValue] = useState('')
   const { searchInputValue, cityItems } = useSelector(
-    (state: RootState) => state.city
+    (state: RootState) => state.city,
+    shallowEqual
   )
 
   useEffect(() => {

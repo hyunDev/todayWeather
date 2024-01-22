@@ -39,6 +39,7 @@ const BarChart = ({
       },
     ],
   })
+
   const optionsData: ChartOptions<'bar'> = useMemo(
     () => ({
       responsive: true,

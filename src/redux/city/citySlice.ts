@@ -33,11 +33,16 @@ const initialState: CityState = {
   cityItems: [],
 }
 
+interface cityType {
+  code: string
+  name: string
+}
+
 export const fetchFirstSelectOptions = createAsyncThunk(
   'city/fetchFirstSelectOptions',
   async () => {
-    const newOptions: any = await getMainCityAddress()
-    const newData: Option[] = newOptions.regcodes.map((item: any) => ({
+    const newOptions = await getMainCityAddress()
+    const newData: Option[] = newOptions.regcodes.map((item: cityType) => ({
       value: item.code,
       label: item.name,
     }))
@@ -156,11 +161,9 @@ const citySlice = createSlice({
         state.firstSelectOptions = action.payload
       })
       .addCase(fetchSecondSelectOptions.fulfilled, (state, action) => {
-        // state.loading = false
         state.secondSelectOptions = action.payload
       })
       .addCase(fetchThirdSelectOptions.fulfilled, (state, action) => {
-        // state.loading = false
         state.thirdSelectOptions = action.payload
       })
       .addCase(fetchXYCoordinateBySearch.fulfilled, fetchXYCoordinateFulfilled)

@@ -1,6 +1,6 @@
 // library
-import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import styled from 'styled-components'
 // state
 import { RootState } from '../redux/store'
@@ -47,7 +47,7 @@ const MainContainer: React.FC = () => {
     secondSelectValue,
     thirdSelectValue,
     xyCoordinate,
-  } = useSelector((state: RootState) => state.city)
+  } = useSelector((state: RootState) => state.city, shallowEqual)
 
   useEffect(() => {
     if (isFullAddress(firstSelectValue, secondSelectValue, thirdSelectValue)) {
@@ -67,15 +67,7 @@ const MainContainer: React.FC = () => {
     }
   }, [dispatch, firstSelectValue, secondSelectValue, thirdSelectValue])
 
-  useEffect(() => {
-    if (xyCoordinate.x !== 0 && xyCoordinate.y !== 0) {
-      const [x, y] = changeXY(xyCoordinate)
-      setX(x)
-      setY(y)
-    }
-  }, [dispatch, xyCoordinate])
-
-  const changeXY = (xyCoordinate: Coordinate) => {
+  const _changeXY = useCallback((xyCoordinate: Coordinate) => {
     const RE = 6371.00877 // 지구 반경(km)
     const GRID = 5.0 // 격자 간격(km)
     const SLAT1 = 30.0 // 투영 위도1(degree)
@@ -116,7 +108,19 @@ const MainContainer: React.FC = () => {
     const x = Math.floor(ra * Math.sin(theta) + XO + 0.5)
     const y = Math.floor(ro - ra * Math.cos(theta) + YO + 0.5)
     return [x, y]
-  }
+  }, [])
+
+  const changeXY = useMemo(() => {
+    return _changeXY(xyCoordinate)
+  }, [xyCoordinate])
+
+  useEffect(() => {
+    if (xyCoordinate.x !== 0 && xyCoordinate.y !== 0) {
+      const [x, y] = changeXY
+      setX(x)
+      setY(y)
+    }
+  }, [dispatch, changeXY])
 
   const isFullAddress = (add1: Option, add2: Option, add3: Option) => {
     if (add1.label !== '' && add2.label !== '' && add3.label !== '') {

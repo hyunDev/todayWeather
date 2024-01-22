@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 
 const StyledTitle = styled.div`
@@ -15,4 +16,4 @@ const Title = ({ value }: titleProps) => {
   return <StyledTitle>{value}</StyledTitle>
 }
 
-export default Title
+export default React.memo(Title)
